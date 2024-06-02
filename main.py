@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.express as px
-
+from backend import get_data
 
 # set title of the webpage
 st.title("Weather Forecast Dashboard")
@@ -28,12 +28,8 @@ option = st.selectbox("Select data to view:",
 st.subheader(f"{option} for the next {forecast_days} days in {location_input}")
 
 
-# create plotly fig
-def get_data(forecast_days):
-    date = ["2024-06-02", "2024-06-03", "2024-06-04"]
-    temperature = [10, 12, 16]
-    temperature = [forecast_days * i for i in temperature]
-    return date, temperature
+# codeblock from/for backend data
+
 
 
 d, t = get_data(forecast_days)
