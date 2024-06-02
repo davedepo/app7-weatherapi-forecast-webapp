@@ -22,23 +22,31 @@ option = st.selectbox("Select data to view:",
 st.subheader(f"{option} for the next {forecast_days} days in {location_input}")
 
 if location_input:
-    # get temperature/sky data
-    filtered_data = get_data(location_input, forecast_days)
+	try:
+		# get temperature/sky data
+		filtered_data = get_data(location_input, forecast_days)
 
-    if option == "Temperature":
-        temperature = [dict["main"]["temp"] for dict in filtered_data]
-        #celsius_values = [(f - 32) * 5 / 9 for f in temperature]
-        dates = [dict["dt_txt"] for dict in filtered_data]
-        # create temperature plot
-        figure = px.line(x=dates, y=temperature, labels={
-            "x": "Dates", "y": "Temperature (F)"})
-        st.plotly_chart(figure)
+		if option == "Temperature":
+			temperature = [dict["main"]["temp"] for dict in filtered_data]
+			# fix temperature values in output - current value/10
+			temperature = [f / 10 for f in temperature]
+			dates = [dict["dt_txt"] for dict in filtered_data]
+			# create temperature plot
+			figure = px.line(x=dates, y=temperature, labels={
+				"x": "Dates", "y": "Temperature (C)"})
+			st.plotly_chart(figure)
 
-    if option == "Sky":
-        images = {"Clouds": "images/cloud.png", "Clear": "images/clear.png",
-                  "Rain": "images/rain.png", "Snow": "images/snow.png"}
-        sky_conditions = [dict["weather"][0]["main"] for dict in filtered_data]
-        # translating the data
-        image_paths = [images[condition] for condition in sky_conditions]
-        dates = [dict["dt_txt"] for dict in filtered_data]
-        st.image(image=image_paths, caption=dates, width=115)
+		if option == "Sky":
+			images = {"Clouds": "images/cloud.png",
+			          "Clear": "images/clear.png",
+			          "Rain": "images/rain.png", "Snow": "images/snow.png"}
+			sky_conditions = [dict["weather"][0]["main"] for dict in
+			                  filtered_data]
+			# translating the data
+			image_paths = [images[condition] for condition in sky_conditions]
+			dates = [dict["dt_txt"] for dict in filtered_data]
+			st.image(image=image_paths, caption=dates, width=115)
+
+	except KeyError:
+		st.write('WARNING MESSAGE: No such place found - Please check input '
+		         'value again!')
