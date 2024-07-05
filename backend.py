@@ -11,7 +11,11 @@ def get_data(city_name, forecast_days=None, kind=None):
 
 	response = requests.get(url)
 	data = response.json()
+
+	# check json() output as list
 	filtered_data = data["list"]
+	print(filtered_data)
+
 	nr_values = 8 * forecast_days
 	filtered_data = filtered_data[:nr_values]
 	if kind == "Temperature":
@@ -22,5 +26,5 @@ def get_data(city_name, forecast_days=None, kind=None):
 
 
 if __name__ == "__main__":
-	print(get_data(city_name="Mumbai", forecast_days=2, kind="Temperature"))
-	print(len(get_data(city_name="Mumbai", forecast_days=2, kind="Temperature")))
+	print(get_data(city_name="Mumbai", forecast_days=1, kind="Temperature"))
+	print(len(get_data(city_name="Mumbai", forecast_days=1, kind="Temperature")))
